@@ -57,27 +57,19 @@ class ViewPlayer{
         <section>
             <h2>Enregistrer un joueur</h2>
             <form method='POST' action=''>
-                <label for='pseudo'>Pseudo :</label>
-                <input type='text' id='pseudo' name='pseudo' required>
-
-                <label for='email'>Email :</label>
-                <input type='email' id='email' name='email' required>
-
-                <label for='score'>Score :</label>
-                <input type='number' id='score' name='score' required>
-
-                <label for='password'>Mot de passe :</label>
-                <input type='password' id='password' name='password' required>
-
-                <button type='submit' name='addPlayer'>S'inscrire</button>
+                <input type="text" name="pseudo" placeholder="Votre Pseudo">
+                <input type="text" name="email" placeholder="Votre Email">
+                <input type="number" name="score" placeholder="Le Score">
+                <input type="text" name="password" placeholder="Votre Mot de Passe">
+                <input type="submit" name="submit">
             </form>
-            <?php echo $this->getSignUpMessage() ?>
+            <p><?php echo $this->getSignUpMessage() ?></p>
         </section>
 
         <section>
             <h2>Liste des joueurs</h2>
             <?php echo $this->getPlayersList() ?>
-        </section>";
+        </section>
 <?php
         return ob_get_clean();
     }

@@ -1,11 +1,6 @@
 <?php
-/**
- * Classe ModelPlayer
- * 
- * Cette classe représente le modèle des joueurs et permet d'interagir avec la base de données.
- * Elle implémente l'interface InterfaceModel.
- */
-class ModelPlayer implements InterfaceModel{
+class ModelPlayer implements InterfaceModel {
+    //ATTRIBUTES
     private ?int $id;
     private ?string $pseudo;
     private ?string $email;
@@ -13,13 +8,13 @@ class ModelPlayer implements InterfaceModel{
     private ?string $password;
     private ?PDO $bdd;
 
-    public function __construct(?PDO $bdd) {
-        $this->bdd = $bdd;
+    //CONSTRUCT
+    public function __construct(){
+        $this->bdd = connect();
     }
 
-    //GETTERS SETTERS
-
-    /**
+    //GETTER AND SETTER
+     /**
      * Get the value of id
      */
     public function getId(): ?int
@@ -30,7 +25,7 @@ class ModelPlayer implements InterfaceModel{
     /**
      * Set the value of id
      */
-    public function setId(?int $id): self
+    public function setId(int $id): self
     {
         $this->id = $id;
 
@@ -48,7 +43,7 @@ class ModelPlayer implements InterfaceModel{
     /**
      * Set the value of pseudo
      */
-    public function setPseudo(?string $pseudo): self
+    public function setPseudo(string $pseudo): self
     {
         $this->pseudo = $pseudo;
 
@@ -66,7 +61,7 @@ class ModelPlayer implements InterfaceModel{
     /**
      * Set the value of email
      */
-    public function setEmail(?string $email): self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -84,7 +79,7 @@ class ModelPlayer implements InterfaceModel{
     /**
      * Set the value of score
      */
-    public function setScore(?int $score): self
+    public function setScore(int $score): self
     {
         $this->score = $score;
 
@@ -102,7 +97,7 @@ class ModelPlayer implements InterfaceModel{
     /**
      * Set the value of password
      */
-    public function setPassword(?string $password): self
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -120,74 +115,85 @@ class ModelPlayer implements InterfaceModel{
     /**
      * Set the value of bdd
      */
-    public function setBdd(?PDO $bdd): self
+    public function setBdd(PDO $bdd): self
     {
         $this->bdd = $bdd;
 
         return $this;
     }
+   
+
+    //METHODS
 
     /**
-     * Ajoute un joueur à la base de données.
-     * 
-     * @return string Message de confirmation ou d'erreur.
+     * Adds a player to the database
+     * No paramaters needed
+     * @return string containing the message of the result of the operation
      */
-    function add(): string{
-        //Requête
-        try{ 
-            $player = $this->getEmail();
+    public function add():string{
+        try{
+            $pseudo = $this->getPseudo();
+            $email = $this->getEmail();
+            $score = $this->getScore();
+            $password = $this->getPassword();
 
-            $requete = "INSERT INTO players(pseudo, email, score, `password`)
-            VALUE(?,?,?,?)";
-            $req = $this->bdd->prepare($requete);
-            $req->bindParam(1,$player[0], PDO::PARAM_STR);
-            $req->bindParam(2,$player[1], PDO::PARAM_STR);
-            $req->bindParam(3,$player[2], PDO::PARAM_STR);
-            $req->bindParam(4,$player[3], PDO::PARAM_STR);
+            $requete = "INSERT INTO players(pseudo, email, score, psswrd)VALUE(?,?,?,?)";
+            $req = $this->getBdd()->prepare($requete);
+
+            $req->bindParam(1,$pseudo, PDO::PARAM_STR);
+            $req->bindParam(2,$email, PDO::PARAM_STR);
+            $req->bindParam(3,$score, PDO::PARAM_INT);
+            $req->bindParam(4,$password, PDO::PARAM_STR);
             $req->execute();
 
-            return 'Vous avez bien été renregistré';
+            return ''.$pseudo.' a été enregistré en BDD !';
         }
         catch(Exception $e) {
-            echo "Erreur : " . $e->getMessage();
+            return $e->getMessage();
         }
-        return'';
     }
 
-     /**
-     * Récupère tous les joueurs de la base de données.
-     * 
-     * @return array|null Liste des joueurs sous forme d'un tableau associatif ou null en cas d'erreur.
+    /**
+     * Retrieves all players from the database
+     * No parameters needed
+     * @return ?array either contains null or an array containing all the players inside the database in an object format => [{id=data,pseudo=data,email=data,score=data}]
      */
     public function getAll():?array{
         try {
             $requete = "SELECT id, pseudo, email, score FROM players";
-            $req = $this->bdd->prepare($requete);
+            $req = $this->getBdd()->prepare($requete);
             $req->execute();
+
             $data = $req->fetchAll(PDO::FETCH_ASSOC);
+
             return $data;
         } catch (Exception $e) {
-            echo "Erreur : " . $e->getMessage();
+            echo $e->getMessage();
+            return null;
         }
     }
 
     /**
-     * Récupère un joueur par son adresse email.
-     * 
-     * @param string $email L'adresse email du joueur à rechercher.
-     * @return array|null Informations du joueur sous forme d'un tableau associatif ou null si non trouvé.
+     * Retrieves a player from the database using his email
+     * No parameters needed
+     * @return ?array either contains null or an array containing the player inside the database in an object format => [{id=data,pseudo=data,email=data,score=data}]
      */
-    function getByEmail(): ?array {
+    public function getByEmail(): ?array{
         try {
-            $requete = "SELECT id, pseudo, email, score, `password` FROM players WHERE email = ?";
-            $req = $this->bdd->prepare($requete);
+            $email = $this->getEmail();
+            $requete = "SELECT id, pseudo, email, score FROM players WHERE email = ?";
+            $req = $this->getBdd()->prepare($requete);
+
             $req->bindParam(1,$email, PDO::PARAM_STR);
             $req->execute();
-            $data = $req->fetch(PDO::FETCH_ASSOC);
+
+            $data = $req->fetchAll(PDO::FETCH_ASSOC);
             return $data;
         } catch (Exception $e) {
-            echo "Erreur : " . $e->getMessage();
+            echo $e->getMessage();
+            return null;
         }
     }
 
+   
 }

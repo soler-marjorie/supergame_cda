@@ -12,58 +12,17 @@ abstract class AbstractController {
     }
 
     /**
-     * Get the value of header
-     */
-    public function getHeader(): ?ViewHeader
-    {
-        return $this->header;
-    }
-
-    /**
-     * Set the value of header
-     */
-    public function setHeader(?ViewHeader $header): self
-    {
-        $this->header = $header;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of footer
-     */
-    public function getFooter(): ?ViewFooter
-    {
-        return $this->footer;
-    }
-
-    /**
-     * Set the value of footer
-     */
-    public function setFooter(?ViewFooter $footer): self
-    {
-        $this->footer = $footer;
-
-        return $this;
-    }
-
-    /**
      * Get the value of model
      */
-    public function getModel(): ?InterfaceModel
-    {
-        return $this->model;
-    }
+    public function getHeader(): ?ViewHeader { return $this->header; }
+    public function setHeader(?ViewHeader $header): self { $this->header = $header; return $this; }
 
-    /**
-     * Set the value of model
-     */
-    public function setModel(?InterfaceModel $model): self
-    {
-        $this->model = $model;
+    public function getFooter(): ?ViewFooter { return $this->footer; }
+    public function setFooter(?ViewFooter $footer): self { $this->footer = $footer; return $this; }
 
-        return $this;
-    }
+    public function getModel(): ?InterfaceModel { return $this->model; }
+    public function setModel(?InterfaceModel $model): self { $this->model = $model; return $this; }
 
-    abstract public function render();
+
+    public abstract function render():void;
 }

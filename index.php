@@ -5,23 +5,14 @@ session_start();
 
 // Import des ressources communes
 
-include './interface/interfaceModel.php';
+include './utils/utils.php';
 include './abstract/abstractController.php';
-
+include './interface/interfaceModel.php';
+include './model/playerModel.php';
 include './view/header.php';
 include './view/footer.php';
-include './view/ViewPlayer.php';
-
-include './Model/playerModel.php';
-include './utils/utils.php';
+include './view/viewPlayer.php';
 include './controller/playerController.php';
 
-$header = new ViewHeader();
-$footer = new ViewFooter();
-$playerView = new ViewPlayer();
-$playerModel = new ModelPlayer($bdd);
-
-// Instanciation du contrôleur et rendu
-$playerController = new PlayerController($header, $footer, $playerModel, $playerView);
-
-$playerController->render();
+$home = new PlayerController(new ViewHeader(), new ViewFooter(), new ModelPlayer(),new ViewPlayer());
+$home->render();
